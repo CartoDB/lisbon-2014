@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>2014 Champions League pulse | Twitter + CartoDB</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <style>
+      html, body, #map { height: 100%; padding: 0; margin: 0 }
+      .cartodb-timeslider {
+        width:auto;
+        left:20px;
+        right:20px;
+        height: auto!important
+      }
+
+      .timeslider .slider {
+        width:100%!important;
+      }
+    </style>
+
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script type="infowindow/html" id="match_slider">
+      <div class="logos">
+        <ul>
+          <li class="first"><img src="img/real_madrid_logo.png" title="Real Madrid" alt="Real Madrid" /></li>
+          <li class="second"></li>
+          <li class="third"><img src="img/atletico_madrid_logo.png" title="Atlético de Madrid" alt="Atlético de Madrid" /></li>
+        </ul>
+      </div>
+      <div class="timeline">
+        <ul>
+          <li class="first madrid"></li>
+          <li class="second"><div class="slider"></div></li>
+          <li class="third atletico"></li>
+        </ul>
+      </div>
+      <div class="result">
+        <ul>
+          <li class="first madrid"></li>
+          <li class="second"></li>
+          <li class="third atletico"></li>
+        </ul>
+      </div>
+      <div class="time">
+        <a href='#/stop' class='button stop'>pause</a>
+        <p class='value'></p>
+      </div>
+    </script>
+
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.mod.torque.js"></script>
+    <script src="js/match_data.js"></script>
+    <script src="js/match_slider.js"></script>
+
+    <script>
+      function main() {
+        
+        var map = L.map('map', { 
+          zoomControl: false,
+          center: [38.722252, -9.139337],
+          zoom: 3
+        });
+
+        cdb.vis.Overlay.register('match_slider', function(data, viz) {
+          data.template = $('#match_slider').html(); 
+          var slider = new MatchSlider(data);
+          return slider.render();
+        });
+
+        // add a nice baselayer from Stamen 
+        L.tileLayer('https://cartocdn_{s}.global.ssl.fastly.net/base-dark/{z}/{x}/{y}.png').addTo(map);
+
+        cartodb.createLayer(map, 'https://srogers.cartodb.com/api/v2/viz/337d9194-6458-11e3-85b5-e5e70547d141/viz.json',{
+          time_slider: false
+        })
+          .addTo(map)
+          .done(function(layer) {
+
+            var slider = map.viz.addOverlay({
+              type: 'match_slider',
+              layer: layer
+            });
+
+            var torqueLayer = layer;
+            torqueLayer.stop();
+
+            torqueLayer.on('load', function() {
+              torqueLayer.play();
+            });
+
+            torqueLayer.on('change:time', checkTime);
+
+          })
+          .error(function(err) {
+            console.log(err);
+          });
+      }
+
+      function checkTime(data) {
+        _.each(match_data, function(d,i) {
+          if (new Date(data.time) >= new Date(i)) {
+            
+            if (!d.el) {
+              d.el = $('<span>').append(d.type + " - " + d.by + " - " + d.team);
+              $('.slider').parent().append(d.el);
+            }
+
+            d.el.show();
+          } else {
+            if (d.el) d.el.hide();
+          }
+          
+        })
+      }
+
+      window.onload = main;
+    </script>
+  </body>
+</html>
