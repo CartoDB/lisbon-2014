@@ -5,6 +5,10 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+
+
+
+
     <style>
       html, body, #map { height: 100%; padding: 0; margin: 0 }
       .cartodb-timeslider {
@@ -52,12 +56,15 @@
       </div>
     </script>
 
+
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.mod.torque.js"></script>
+    <script src="js/leaflet-hash.js"></script>
     <script src="js/match_data.js"></script>
     <script src="js/match_slider.js"></script>
 
     <script>
+
       function main() {
         
         var map = L.map('map', { 
@@ -81,11 +88,13 @@
           .addTo(map)
           .done(function(layer) {
 
-            var slider = map.viz.addOverlay({
+            var hash = new L.Hash(map, layer);
+
+            slider = map.viz.addOverlay({
               type: 'match_slider',
               layer: layer
             });
-
+            
             var torqueLayer = layer;
             torqueLayer.stop();
 

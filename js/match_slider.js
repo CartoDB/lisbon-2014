@@ -1,7 +1,6 @@
 
   var MatchSlider = cdb.geo.ui.TimeSlider.extend({
 
-
     defaultTemplate: '',
 
     initialize: function() {
