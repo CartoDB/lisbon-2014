@@ -41,6 +41,16 @@
   <body>
     <div id="map"></div>
 
+    <div id="not_supported_dialog">
+      <h2>Tweets during Champions League 2014 final</h2>
+      <p>This visualization only works in modern browsers. Upgrade yours and enjoy.</p>
+      <ul>
+        <li><a href="http://www.apple.com/safari/" class="safari">Safari</a></li>
+        <li><a href="https://www.google.com/chrome/" class="chrome">Chrome</a></li>
+        <li class="last"><a href="http://www.mozilla.org/en-US/firefox/all/‎" class="firefox">Firefox</a></li>
+      </ul>
+    </div>
+
     <script type="infowindow/html" id="match_slider">
 
       <div class="head">
@@ -170,9 +180,17 @@
 
             torqueLayer.on('change:time', checkTime);
           })
-          .error(function(err) {
-            console.log(err);
-          });
+          .on('error', manageError);
+      }
+
+      function manageError(err, layer) {
+        $('#not_supported_dialog').show();
+        // hide all the overlays
+        var overlays = this.getOverlays()
+        for (var i = 0; i < overlays.length; ++i) {
+          var o = overlays[i];
+          o.hide && o.hide();
+        }
       }
 
       function checkTime(data) {
