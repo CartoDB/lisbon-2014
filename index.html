@@ -34,6 +34,7 @@
 
     <link href='http://fonts.googleapis.com/css?family=Rokkitt:700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/tipsy.css" />
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
     <link rel="stylesheet" href="css/match.css" />
   </head>
@@ -82,8 +83,10 @@
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.mod.torque.js"></script>
     <script src="js/leaflet-hash.js"></script>
-    <script src="js/match_data.js"></script>
     <script src="js/match_slider.js"></script>
+    <script src="js/tipsy.js"></script>
+    <script src="js/match_data.js"></script>
+    
 
     <script>
 
@@ -160,20 +163,12 @@
             torqueLayer.stop();
 
             torqueLayer.on('load', function() {
-              console.log("hello");
-
               torqueLayer.play();
 
-              // torqueLayer.provider.aggregateByKey(function(a) {
-              //   console.log(a);
-              // });
-
-
-              // torqueLayer.off('load');
+              drawStartEnd()
             });
 
             torqueLayer.on('change:time', checkTime);
-
           })
           .error(function(err) {
             console.log(err);
@@ -182,37 +177,143 @@
 
       function checkTime(data) {
 
-        _.each(match_data, function(d,i) {
+        _.each(match_data.highlights, function(d,i) {
+          
+          // Block
+          var block = d.team.indexOf('Atlético') !== -1 ? 'atletico' : 'madrid';
+
           if (new Date(data.time) >= new Date(i)) {
             
             if (!d.el) {
-              d.el = $('<i>')
-                .addClass("icon " + d.type)
-                .attr('data-tooltip', d.type + " - " + d.by + " - " + d.team)
-                .append(d.type);
 
-              var pos = jarrr(new Date(i).getTime());
+              var div = $('<div>').addClass('highlight ' + block);
 
-              // Block
-              var block = d.team.indexOf('Atlético') !== -1 ? 'atletico' : 'madrid'
+              div.append($('<i>')
+                  .addClass("icon " + d.type + " ")
+                  .attr('data-tipsy', d.text)
+                  .append(d.type));
+              
+              div.append($('<span>').addClass('line'));
+
+              d.el = div;
+
+              var pos = getHighlightPos(new Date(i).getTime());
 
               // Position
-              d.el.css('left', pos + "%");
+              d.el.css({
+                left: pos + "%"
+              });
 
               $('.highlights').find('.' + block + ' .timeline').append(d.el);
+
+              generateTooltip(d.el.find('i'));
+
+              if (d.type === "goal") {
+                var goals = parseInt($('em.' + block).text());
+                $('em.' + block).text(++goals);
+              }
             }
 
             d.el.show();
           } else {
-            if (d.el) d.el.hide();
+            
+            if (d.el && d.type === "goal") {
+              var goals = parseInt($('em.' + block).text());
+              $('em.' + block).text(--goals);
+            }
+
+            if (d.el) {
+              d.el
+                .hide()
+                .remove();
+
+              delete d.el;
+            }
           }
           
         })
       }
 
-      function jarrr(timestamp)  {
+      function generateTooltip($el) {
+        
+        $el.tipsy({
+          // trigger:  'manual',
+          title:    function() {
+            return this.getAttribute('data-tipsy') + ''
+          },
+          html:     true,
+          gravity:  $.fn.tipsy.autoBounds(250, 's'),
+          fade:     true,
+          delayIn:  300,
+          delayOut: 750
+        })
+
+        // $('#mylink').attr('title','Input here:<input id="toolbar">');
+        // $('#mylink').tipsy({trigger:'manual',gravity:'w', html:true});
+
+        // //.tipsy class is what the generated tooltip divs have, so we use the 
+        // //live event to link the mouseover/mouseout events
+        // $('.tipsy').live('mouseover',function(e){
+        //   clearTimeout(timer);
+        // });
+        // $('.tipsy').live('mouseout',function(e){
+        //   timer = setTimeout("$('#mylink').tipsy('hide');",3000);//hide the link in 3 seconds
+        // });
+
+        // //manually show the tooltip
+        // $('#mylink').bind('mouseover',function(e){
+        //    $(this).tipsy('show');
+        //  });
+      }
+
+      function getHighlightPos(timestamp)  {
         var tb = torqueLayer.getTimeBounds();
         return ((timestamp-tb.start)*100)/(tb.end-tb.start);
+      }
+
+      function drawStartEnd() {
+
+        if ($('.icon.start').length > 0) {
+          return false;
+        }
+
+        // Draw start
+        var div = $('<div>').addClass('highlight');
+        div.append($('<i>').addClass("icon start"));
+        div.append($('<span>').addClass('separator'));
+        div.append($('<p>').text(match_data.start.text));
+        var pos = getHighlightPos(new Date(match_data.start.time).getTime());
+        
+        div.css({ left: pos + "%" });
+        $('.highlights .timeslider').find('.wrap_slider')
+          .append(div)
+          .append(
+            $('<span>')
+              .addClass('slider_mamufas start')
+              .css({
+                left: 0,
+                width: pos + '%'
+              })
+          );
+
+        // Draw end
+        var div = $('<div>').addClass('highlight');
+        div.append($('<i>').addClass("icon end"));
+        div.append($('<span>').addClass('separator'));
+        div.append($('<p>').text(match_data.end.text));
+        var pos = getHighlightPos(new Date(match_data.end.time).getTime());
+        
+        div.css({ left: pos + "%" });
+        $('.highlights .timeslider').find('.wrap_slider')
+          .append(div)
+          .append(
+            $('<span>')
+              .addClass('slider_mamufas end')
+              .css({
+                right: 0,
+                left: pos + "%"
+              })
+          );
       }
 
       window.onload = main;

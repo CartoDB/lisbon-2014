@@ -20,12 +20,19 @@
     // Resetting defaults
     .slider { width:100%!important }
     li { border:none!important }
+
     a.button {
       position:absolute;
-      left:18px!important;
-      top:-18px!important;
-      // width:auto;
+      left:45px!important;
+      top:-8px!important;
+      width:18px;
+      height:18px;
       margin:0;
+      @include background(image-url('sprite.png') 1px -83px #333);
+      @include border-radius(2px);
+
+      &:hover { @include background(image-url('sprite.png') 1px -83px #333) }
+      &.stop, &.stop:hover { @include background(image-url('sprite.png') -13px -82px #333) }
     }
     
     
@@ -120,7 +127,7 @@
     // HIGHTLIGHTS!
 
     div.highlights {
-      padding:20px;
+      padding:10px 20px;
     
       div.team {
         position:relative;
@@ -153,17 +160,37 @@
         width:auto;
       }
 
+      .ui-slider-horizontal {
+        height:2px;
+      }
+
+      .ui-slider-range {
+        height:4px;
+        margin-top:-1px;
+        background:#8996A3;
+      }
+
+      .ui-slider-handle {
+        top:-5px;
+        background-color:#333;
+      }
+
       div.timeslider {
         position:relative;
         height:3px;
         margin:9px 0;
       }
 
-      // Icons
+      // Highlight icons
+      
+      div.highlight {
+        position:absolute;
+        top:0;
+        height:32px;
+      }
 
       i {
         position:absolute;
-        top:50%;
         text-indent:-9999px;
         font-size:0;
         line-height:0;
@@ -179,20 +206,78 @@
         }
 
         &.yellow {
-          width:11px;
-          height:15px;
-          margin-left:-5px;
+          width:12px;
+          height:16px;
+          margin-left:-6px;
           margin-top:-7px;
           @include background(image-url('sprite.png') -14px -1px );
         }
 
         &.red {
-          width:11px;
-          height:15px;
-          margin-left:-5px;
+          width:12px;
+          height:16px;
+          margin-left:-6px;
           margin-top:-7px;
           @include background(image-url('sprite.png') -1px -1px );
         }
+
+        &.start, &.end {
+          top:22px;
+          width:18px;
+          height:10px;
+          margin-left:-9px;
+          @include background(image-url('sprite.png') -29px -4px ); 
+        }
+      }
+
+      p {
+        position:absolute;
+        left:50%;
+        top:-42px;
+        width:100px;
+        margin-left:-49px;
+        text-align: center;
+        z-index:0;
+      }
+
+      span.slider_mamufas {
+        position:absolute;
+        top:-2px;
+        width:auto;
+        height:2px;
+        background:transparent;
+        border-top:2px solid white;
+        border-bottom:2px solid white;
+        z-index:101;
+      }
+
+      span.separator {
+        position:absolute;
+        left:50%;
+        top:-11px!important;
+        margin-left:-1px;
+        width:1px;
+        height:24px;
+        background:#DDDDDD;
+      }
+
+      span.line {
+        position:absolute;
+        left:50%;
+        margin-left:-1px;
+        width:1px;
+        height:10px;
+        background:#8996A3;
+      }
+
+      div.highlight.madrid {
+        i { top:10px; margin-top:0 }
+        span { bottom:-9px }
+      }
+
+      div.highlight.atletico {
+        i { bottom:10px }
+        span { top:-9px }
       }
 
 
