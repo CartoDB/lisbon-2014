@@ -1,58 +1,80 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>2014 Champions League pulse | Twitter + CartoDB</title>
+    <title>2014 Champions League final tweets pulse | Twitter + CartoDB</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <link rel="shortcut icon" href="img/favicon.ico" />
 
+    <meta name="description" content="Visualization about the amount of tweets during 2014 Champions League final between Rel Madrid and Atlético de Madrid" />
+    <meta name="keywords" content="cartodb, champions league, tweets, goal, 2014 lisbon, soccer, football" />
+    <meta name="distribution" content="Global">
+    <meta name="author" content="Twitter + CartoDB">
+    <meta name="detail" content="Twitter pulse along 2014 Champions League final">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
 
+    <meta property="og:title" content="Twitter pulse along 2014 Champions League final"/>
+    <meta property="og:description" content="Visualization about the amount of tweets during 2014 Champions League final between Rel Madrid and Atlético de Madrid"/> 
+    <meta property="og:type" content="Visualization"/>
+    <meta property="og:url" content="http://cartodb.github.io/2014-lisbon" />
+    
+    <meta property="og:image" content="img/thumbnail.png"/>
 
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cartodb">
+    <meta name="twitter:title" content="Twitter pulse along 2014 Champions League final">
+    <meta name="twitter:description" content="Visualization about the amount of tweets during 2014 Champions League final between Rel Madrid and Atlético de Madrid">
+    <meta name="twitter:creator" content="@cartodb">
+    <meta name="twitter:image:src" content="img/thumbnail.png">
+    <meta name="twitter:domain" content="github.com">
+    
+    <link rel="canonical" href="http://cartodb.github.io/2014-lisbon">
 
-    <style>
-      html, body, #map { height: 100%; padding: 0; margin: 0 }
-      .cartodb-timeslider {
-        width:auto;
-        left:20px;
-        right:20px;
-        height: auto!important
-      }
-
-      .timeslider .slider {
-        width:100%!important;
-      }
-    </style>
-
+    <link href='http://fonts.googleapis.com/css?family=Rokkitt:700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+    <link rel="stylesheet" href="css/match.css" />
   </head>
   <body>
     <div id="map"></div>
 
     <script type="infowindow/html" id="match_slider">
-      <div class="logos">
+
+      <div class="head">
         <ul>
-          <li class="first"><img src="img/real_madrid_logo.png" title="Real Madrid" alt="Real Madrid" /></li>
-          <li class="second"></li>
-          <li class="third"><img src="img/atletico_madrid_logo.png" title="Atlético de Madrid" alt="Atlético de Madrid" /></li>
+          <li><h2 class="madrid">Real Madrid</h2></li>
+          <li>
+            <div class="score">
+              <em class="madrid">0</em>
+              <em class="separator">-</em>
+              <em class="atletico">0</em>
+            </div>
+          </li>
+          <li><h2 class="atletico">Atl. de Madrid</h2></li>
         </ul>
+
+        <div class="time">
+          <p class="value"></p>  
+        </div>
       </div>
-      <div class="timeline">
-        <ul>
-          <li class="first madrid"></li>
-          <li class="second"><div class="slider"></div></li>
-          <li class="third atletico"></li>
-        </ul>
-      </div>
-      <div class="result">
-        <ul>
-          <li class="first madrid"></li>
-          <li class="second"></li>
-          <li class="third atletico"></li>
-        </ul>
-      </div>
-      <div class="time">
-        <a href='#/stop' class='button stop'>pause</a>
-        <p class='value'></p>
+
+      <div class="highlights">
+        <div class="team madrid">
+          <div class="madrid logo"></div>
+          <div class="timeline"></div>
+        </div>
+        <div class="timeslider">
+          <a href='#/stop' class='button stop'>pause</a>
+          <div class="wrap_slider">
+            <div class="slider"></div>
+          </div>
+        </div>
+        <div class="team atletico">
+          <div class="atletico logo"></div>
+          <div class="timeline"></div>
+        </div>
       </div>
     </script>
 
@@ -64,6 +86,45 @@
     <script src="js/match_slider.js"></script>
 
     <script>
+
+      torque.providers.windshaft.prototype.aggregateByKey = function(callback) {
+        var url = this.templateUrl
+                  .replace('{x}', 0)
+                  .replace('{y}', 0)
+                  .replace('{z}', 0)
+                  .replace('{s}', 0)
+ 
+        var self = this;
+        var extra = this._extraParams();
+        torque.net.get( url,  function (data) {
+          var rows = JSON.parse(data.responseText);
+          callback(self._aggregateByKey(rows));
+        })
+      }
+      torque.providers.windshaft.prototype._aggregateByKey = function(rows) {
+        function getKeys(row) {
+          var keys = {};
+          var dates = row.dates__uint16;
+          var vals = row.vals__uint8;
+          var valuesCount = vals.length;
+          for (var s = 0; s < valuesCount; ++s) {
+            keys[dates[s]] = vals[s];
+          }
+          return keys;
+        }
+ 
+        var keys = {};
+        for (r = 0; r < rows.length; ++r) {
+          var rowKeys = getKeys(rows[r]);
+          for(var k in rowKeys) {
+            keys[k] = keys[k] || 0;
+            keys[k] += rowKeys[k];
+          }
+        }
+        return keys;
+      }
+
+      var torqueLayer;
 
       function main() {
         
@@ -95,11 +156,20 @@
               layer: layer
             });
             
-            var torqueLayer = layer;
+            torqueLayer = layer;
             torqueLayer.stop();
 
             torqueLayer.on('load', function() {
+              console.log("hello");
+
               torqueLayer.play();
+
+              // torqueLayer.provider.aggregateByKey(function(a) {
+              //   console.log(a);
+              // });
+
+
+              // torqueLayer.off('load');
             });
 
             torqueLayer.on('change:time', checkTime);
@@ -111,12 +181,25 @@
       }
 
       function checkTime(data) {
+
         _.each(match_data, function(d,i) {
           if (new Date(data.time) >= new Date(i)) {
             
             if (!d.el) {
-              d.el = $('<span>').append(d.type + " - " + d.by + " - " + d.team);
-              $('.slider').parent().append(d.el);
+              d.el = $('<i>')
+                .addClass("icon " + d.type)
+                .attr('data-tooltip', d.type + " - " + d.by + " - " + d.team)
+                .append(d.type);
+
+              var pos = jarrr(new Date(i).getTime());
+
+              // Block
+              var block = d.team.indexOf('Atlético') !== -1 ? 'atletico' : 'madrid'
+
+              // Position
+              d.el.css('left', pos + "%");
+
+              $('.highlights').find('.' + block + ' .timeline').append(d.el);
             }
 
             d.el.show();
@@ -125,6 +208,11 @@
           }
           
         })
+      }
+
+      function jarrr(timestamp)  {
+        var tb = torqueLayer.getTimeBounds();
+        return ((timestamp-tb.start)*100)/(tb.end-tb.start);
       }
 
       window.onload = main;
