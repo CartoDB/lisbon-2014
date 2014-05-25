@@ -32,7 +32,11 @@
           zoom: zoom
         };
       }
+
       obj.step = parseFloat(args[4]);
+      if (!this.torque._last_step) {
+        this.torque._last_step = obj.step
+      }
 
       return obj;
     } else {
@@ -45,7 +49,7 @@
     var center = map.getCenter(),
         zoom = map.getZoom(),
         precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2)),
-        step = torque.getStep();
+        step = torque._last_step || 0;
 
     return "#/" + [zoom,
       center.lat.toFixed(precision),
