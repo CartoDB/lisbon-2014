@@ -24,7 +24,7 @@
         team: 'Atlético de Madrid'
       },
 
-      'Sat May 24 2014 21:14:00 GMT+0000': {
+      'Sat May 24 2014 21:14:30 GMT+0000': {
         type: 'yellow',
         text: '27\' - <b>Ramos</b> is shown the yellow card',
         team: 'Real Madrid'
