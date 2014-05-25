@@ -1,5 +1,4 @@
 
-  - Share match hightlights.
-  - Mobile browsers.
   - Review slider-step within leaflet-hash.
-  - Thumbnail.
+  - Move the map, starts the animation, unbind event.
+  - Share match hightlights.

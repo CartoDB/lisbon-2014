@@ -69,11 +69,14 @@
     right:0;
   }
 
+  // Attribution
+
+  .leaflet-control-attribution { display:none }
+
 
   // Time slider
 
   div.cartodb-timeslider {
-
     width:auto;
     left:20px;
     right:20px;
@@ -82,11 +85,7 @@
     // Resetting defaults
     .slider { width:100%!important }
     li { border:none!important }
-
     a.button {
-      position:absolute;
-      left:45px!important;
-      top:-8px!important;
       width:18px;
       height:18px;
       margin:0;
@@ -96,7 +95,7 @@
       &:hover { @include background(image-url('sprite.png') 1px -83px #333) }
       &.stop, &.stop:hover { @include background(image-url('sprite.png') -13px -82px #333) }
     }
-    
+
     
     // New styles :)
     div.head {
@@ -115,6 +114,16 @@
         @include inline-block();
         height:63px;
         vertical-align: middle;
+      }
+
+      div.logo {
+        display:none;
+        width:23px;
+        height:32px;
+        padding:0;
+        margin:16px 12px 0;
+        &.madrid { @include background(image-url('sprite.png')  -1px -51px ) }
+        &.atletico { @include background(image-url('sprite.png')  -1px -18px ) }
       }
 
       h2 {
@@ -171,6 +180,15 @@
         @include border-radius(2px);
         text-align: center;
         line-height: 27px;
+
+        a.button {
+          display:none;
+          position:relative;
+          vertical-align: middle;
+          left:auto;
+          top:auto;
+          margin-right:5px;
+        }
 
         p {
           @include inline-block();
@@ -241,6 +259,12 @@
         position:relative;
         height:3px;
         margin:9px 0;
+
+        a.button {
+          position:absolute;
+          left:45px!important;
+          top:-8px!important;
+        }
       }
 
       // Highlight icons
@@ -353,5 +377,21 @@
 
     } // Info
 
+  }
 
+
+  // Hello mobile
+
+  @media (max-width: 760px){
+    .highlights { display:none }
+    div.time a.button { display:inline-block!important }
+    div.cartodb-zoom,
+    div.cartodb-share { top:110px }
+    div.head h2 {display:none}
+    div.head div.logo {display:inline-block!important}
+  }
+
+  @media (max-width: 474px) {
+    div.cartodb-zoom,
+    div.cartodb-share { top:130px }
   }

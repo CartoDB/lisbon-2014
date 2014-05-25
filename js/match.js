@@ -3,13 +3,7 @@
   var torqueLayer;
 
   function main() {
-    
-    var map = L.map('map', { 
-      zoomControl: false,
-      center: [38.722252, -9.139337],
-      zoom: 3
-    });
-
+  
     cdb.vis.Overlay.register('match_slider', function(data, viz) {
       data.template = $('#match_slider').html(); 
       var slider = new MatchSlider(data);
@@ -29,27 +23,28 @@
     });
 
     // add a nice baselayer from Stamen 
-    L.tileLayer('https://cartocdn_{s}.global.ssl.fastly.net/base-dark/{z}/{x}/{y}.png').addTo(map);
 
-    cartodb.createLayer(map, 'http://srogers.cartodb.com/api/v2/viz/a43ea07a-e3f2-11e3-92f9-0e230854a1cb/viz.json',{
+    cartodb.createVis('map', 'http://srogers.cartodb.com/api/v2/viz/a43ea07a-e3f2-11e3-92f9-0e230854a1cb/viz.json', {
       time_slider: false
     })
-      .addTo(map)
-      .done(function(layer) {
+      .done(function(vis, layers) {
+
+        var map = vis.getNativeMap();
+        var layer = layers[2];
 
         var hash = new L.Hash(map, layer);
 
-        var test = map.viz.addOverlay({
+        var test = vis.addOverlay({
           type: 'match_zoom',
           layer: layer
         });
 
-        var share = map.viz.addOverlay({
+        var share = vis.addOverlay({
           type: 'share',
           layer: layer
         })
 
-        slider = map.viz.addOverlay({
+        slider = vis.addOverlay({
           type: 'match_slider',
           layer: layer
         });
