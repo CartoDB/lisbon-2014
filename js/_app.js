@@ -177,6 +177,7 @@
 })(window);
 
   var torqueLayer;
+  var count = 1;
 
   function main() {
   
@@ -190,13 +191,16 @@
     // add a nice baselayer from Stamen 
 
     cartodb.createVis('map', 'http://srogers.cartodb.com/api/v2/viz/a43ea07a-e3f2-11e3-92f9-0e230854a1cb/viz.json', {
+      center_lat: 24.5,
+      center_lon: -7,
+      zoom: 2,
       time_slider: false,
       fullscreen: true
     })
       .done(function(vis, layers) {
 
         vis.map.set({
-          minZoom: 2,
+          minZoom: 1,
           maxZoom: 10
         });
 
@@ -218,15 +222,19 @@
         torqueLayer = layer;
         torqueLayer.stop();
 
-        torqueLayer.on('load', function() {
-          torqueLayer.play();
+        if (location.hash) ++count
 
-          drawStartEnd()
-        });
-
+        torqueLayer.on('load', onTorqueLoad);
         torqueLayer.on('change:time', checkTime);
       })
       .on('error', manageError);
+  }
+
+  function onTorqueLoad() {
+    --count;
+    torqueLayer.play();
+    drawStartEnd();
+    if (count === 0) torqueLayer.off('load', onTorqueLoad)
   }
 
   function manageError(err, layer) {
@@ -296,6 +304,10 @@
       }
       
     })
+  }
+
+  function destroyTooltip($el) {
+
   }
 
   function generateTooltip($el) {

@@ -1,5 +1,5 @@
 
-UGLIFYJS = node ./node_modules/uglify-js/bin/uglifyjs -o
+UGLIFYJS = ./node_modules/uglify-js/bin/uglifyjs
 JS_FILES = $(wildcard js/*.js)
 
 minify:
