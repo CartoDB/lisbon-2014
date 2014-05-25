@@ -1,2 +1,4 @@
 .sass-cache
+node_modules
 compass_app_log.txt
+TODO.md
