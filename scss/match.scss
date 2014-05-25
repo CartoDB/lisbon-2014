@@ -4,22 +4,71 @@
   @import "compass/css3/inline-block";
   @import "compass/css3/border-radius";
 
+  @import "normalize";
+  @import "tipsy";
+  @import "not_supported";
 
-  html, body, #map { height: 100%; padding: 0; margin: 0 }
+
+  html, body, #map {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  // Header 
+  .header {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    display:block;
+    padding:22px 50px;
+    background:#333333;
+    border-bottom:1px solid black;
+    z-index:1;
+
+    i.twitter {
+      position:absolute;
+      width:14px;
+      height:12px;
+      top:25px;
+      left:22px;
+      @include background(image-url('sprite.png') no-repeat -39px -86px);
+    }
+
+    h1 {
+      margin:0;
+      font:bold 19px "Rokkitt", Arial;
+      color:white;
+      line-height:21px;
+    }
+
+    p {
+      margin:5px 0 0;
+      font:normal 14px "Helvetica Neue", Arial;
+      line-height:16px;
+      color:#999;
+    }
+  }
+
+
+  // Zoom
+
+  div.cartodb-zoom {
+    position: absolute;
+    left:0px;
+    top:90px;
+  }
 
   
-  // Not supported
+  // Share
 
-  #not_supported_dialog {position:absolute; display:none; width:356px; height:233px; top:50%; left:50%; margin-top:-107px; margin-left:-178px; padding:0; background-color:#FFF; text-align:center; font-family:'Helvetica', Arial; color:#666666; z-index:10000;}
-  #not_supported_dialog h2 {display:inline-block; width:200px; margin:30px 0 0; padding-bottom:16px; font-size:15px; font-weight:bold; border-bottom:1px solid #D9D9D9; vertical-align:top; zoom:1; *display:inline;}
-  #not_supported_dialog p {display:block; padding:0 40px; margin:12px 0 0; font-size:15px;}
-  #not_supported_dialog ul {position:absolute; bottom:0; left:0; right:0; display:block; margin:0; padding:0; list-style:none; border-top:1px solid #D9D9D9;}
-  #not_supported_dialog ul li {float:left; margin:0; padding:0; border-right:1px solid #D9D9D9;}
-  #not_supported_dialog ul li a {display:block; width:118px; height:74px; background-repeat:no-repeat; background-position:center center; font-size:0; line-height:0; text-indent:-9999px;}
-  #not_supported_dialog ul li.last {border:none;}
-  #not_supported_dialog a.safari {@include background(image-url('safari.png') no-repeat center center)}
-  #not_supported_dialog a.chrome {@include background(image-url('chrome.png') no-repeat center center)}
-  #not_supported_dialog a.firefox {@include background(image-url('firefox.png') no-repeat center center)}
+  div.cartodb-share {
+    position:absolute;
+    display:block;
+    top:90px;
+    right:0;
+  }
 
 
   // Time slider
@@ -233,6 +282,14 @@
           margin-left:-6px;
           margin-top:-7px;
           @include background(image-url('sprite.png') -1px -1px );
+        }
+
+        &.substitution {
+          width:13px;
+          height:13px;
+          margin-left:-6px;
+          margin-top:-6px;
+          @include background(image-url('sprite.png') -72px -2px );
         }
 
         &.start, &.end {
