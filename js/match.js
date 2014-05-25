@@ -10,34 +10,24 @@
       return slider.render();
     });
 
-    // map zoom control
-    cdb.vis.Overlay.register('match_zoom', function(data, vis) {
-      data.template = $("#match_zoom").html();
-
-      var zoom = new cdb.geo.ui.Zoom({
-        model: data.map,
-        template: cdb.core.Template.compile(data.template)
-      });
-
-      return zoom.render();
-    });
 
     // add a nice baselayer from Stamen 
 
     cartodb.createVis('map', 'http://srogers.cartodb.com/api/v2/viz/a43ea07a-e3f2-11e3-92f9-0e230854a1cb/viz.json', {
-      time_slider: false
+      time_slider: false,
+      fullscreen: true
     })
       .done(function(vis, layers) {
+
+        vis.map.set({
+          minZoom: 2,
+          maxZoom: 10
+        });
 
         var map = vis.getNativeMap();
         var layer = layers[2];
 
         var hash = new L.Hash(map, layer);
-
-        var test = vis.addOverlay({
-          type: 'match_zoom',
-          layer: layer
-        });
 
         var share = vis.addOverlay({
           type: 'share',

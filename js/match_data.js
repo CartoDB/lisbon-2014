@@ -7,7 +7,7 @@
     },
 
     end: {
-      time: 'Sat May 24 2014 23:15:00 GMT+0000',
+      time: 'Sat May 24 2014 23:21:00 GMT+0000',
       text:  '122\''
     },
 

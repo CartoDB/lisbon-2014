@@ -50,24 +50,26 @@
     }
   }
 
-  // Legends
+  // Full screen 
+  .cartodb-fullscreen {
+    position:absolute;
+    left:0;
+    top:175px;
+  }
 
+  // Legends
   .cartodb-legend-stack {
     display:none!important;
   }
 
-
   // Zoom
-
   div.cartodb-zoom {
     position: absolute;
     left:0px;
     top:90px;
   }
-
   
   // Share
-
   div.cartodb-share {
     position:absolute;
     display:block;
@@ -76,12 +78,10 @@
   }
 
   // Attribution
-
   .leaflet-control-attribution { display:none }
 
 
   // Time slider
-
   div.cartodb-timeslider {
     width:auto;
     left:20px;
@@ -193,7 +193,7 @@
           vertical-align: middle;
           left:auto;
           top:auto;
-          margin-right:5px;
+          margin-right:10px;
         }
 
         p {
@@ -395,9 +395,15 @@
     div.cartodb-share { top:110px }
     div.head h2 {display:none}
     div.head div.logo {display:inline-block!important}
+    div.time { width:90px!important; margin-left:-45px!important }
+    .cartodb-timeslider { box-shadow:none!important; border:none!important }
   }
 
   @media (max-width: 474px) {
+    div.header { padding:10px 10px 10px 10px }
+    div.header h1 { font-size:16px!important }
+    div.header p { font-size:12px!important }
+    div.header i.twitter { display:none }
     div.cartodb-zoom,
-    div.cartodb-share { top:130px }
+    div.cartodb-share { top:100px }
   }
