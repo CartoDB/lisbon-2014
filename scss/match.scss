@@ -141,7 +141,7 @@
         line-height:63px;
 
         &.madrid { text-align:right }
-        &.atletico { color:red; text-shadow:0 0 3px white }
+        &.atletico { color:red; text-shadow: -1px -1px 0 white,1px -1px 0 white,-1px 1px 0 white, 1px 1px 0 white; }
 
         // Trick
         &:before {
