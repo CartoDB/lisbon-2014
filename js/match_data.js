@@ -50,7 +50,7 @@
 
       'Sat May 24 2014 22:02:00 GMT+0000': {
         type: 'substitution',
-        text: '59\' - Double substitution <b>Marcelo and Isco</b> replaces <b>F. Coentrao and Khedira</b>',
+        text: '59\' - Double substitution <b>Marcelo and Isco</b> replace <b>F. Coentrao and Khedira</b>',
         team: 'Real Madrid'
       },
 
