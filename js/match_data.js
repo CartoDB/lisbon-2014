@@ -130,6 +130,18 @@
         type: 'goal',
         text: '121\' - GOAL by <b>Cristiano</b>!',
         team: 'Real Madrid'
+      },
+
+      'Sat May 24 2014 23:20:00 GMT+0000': {
+        type: 'yellow',
+        text: '122\' - Yellow card for <b>Cristiano</b> and <b>Varane</b>',
+        team: 'Real Madrid'
+      },
+
+      'Sat May 24 2014 23:21:00 GMT+0000': {
+        type: 'red',
+        text: '122\' - <b>Simeone</b> is shown the red card',
+        team: 'Atlético de Madrid'
       }
     }
   }
