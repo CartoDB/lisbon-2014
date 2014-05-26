@@ -112,7 +112,7 @@
         torqueLayer = layer;
         torqueLayer.stop();
 
-        if (location.hash) ++count
+        // if (location.hash) ++count
 
         torqueLayer.on('load', onTorqueLoad);
         torqueLayer.on('change:time', checkTime);
@@ -121,10 +121,10 @@
   }
 
   function onTorqueLoad() {
-    --count;
+    // --count;
     torqueLayer.play();
     drawStartEnd();
-    if (count === 0) torqueLayer.off('load', onTorqueLoad)
+    // if (count === 0) torqueLayer.off('load', onTorqueLoad)
   }
 
   function manageError(err, layer) {
