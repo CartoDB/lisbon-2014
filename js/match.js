@@ -3,7 +3,6 @@
   var SHARE_TEXT = 'Champions League 2014 Tweets - ';
   var torqueLayer;
   var map;
-  var count = 1;
 
   function main() {
   
@@ -112,8 +111,6 @@
         torqueLayer = layer;
         torqueLayer.stop();
 
-        // if (location.hash) ++count
-
         torqueLayer.on('load', onTorqueLoad);
         torqueLayer.on('change:time', checkTime);
       })
@@ -121,10 +118,8 @@
   }
 
   function onTorqueLoad() {
-    // --count;
     torqueLayer.play();
     drawStartEnd();
-    // if (count === 0) torqueLayer.off('load', onTorqueLoad)
   }
 
   function manageError(err, layer) {
